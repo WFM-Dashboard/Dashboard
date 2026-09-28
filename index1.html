@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Transitions Portfolio — WFM Center of Excellence</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+  :root{
+    --bg: #0D0D0D;
+    --bg-deep: #000000;
+    --panel: #1A1A1A;
+    --panel-raised: #262626;
+    --line: #3D3D3D;
+    --text: #F5F5F5;
+    --text-dim: #B3B3B3;
+    --text-faint: #737373;
+    --red: #E5484D;
+    --red-dim: #4D2426;
+    --amber: #F5A623;
+    --amber-dim: #4A3A1A;
+    --green: #3DD16D;
+    --green-dim: #1E3D28;
+    --blue: #999999;
+    --purple: #999999;
+    --purple-deep: #F5F5F5;
+    --accent-green: #FFFFFF;
+    --font-head: Verdana, Geneva, sans-serif;
+    --font-data: Verdana, Geneva, sans-serif;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--bg);color:var(--text);font-family:var(--font-head);line-height:1.5;}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 28px 100px;}
+
+  .masthead{display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:16px;background:linear-gradient(150deg, #262626 0%, #000000 100%);color:#fff;padding:44px 40px 36px;margin:0 -28px 40px;}
+  .masthead h1{font-size:36px;font-weight:700;margin:0 0 8px 0;letter-spacing:-0.01em;color:#fff;}
+  .masthead .sub{color:#B3B3B3;font-size:14.5px;max-width:600px;}
+  .masthead .meta{text-align:right;font-family:var(--font-data);font-size:12.5px;color:#8A8A8A;line-height:1.7;}
+  .meta .pulse{color:var(--accent-green);}
+  .meta .pulse::before{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--accent-green);margin-right:6px;box-shadow:0 0 6px var(--accent-green);}
+
+  .pulse-row{display:grid;grid-template-columns: 1.3fr 1fr 1fr 1fr 1fr;gap:1px;background:var(--line);border:1px solid var(--line);margin-bottom:40px;border-radius:8px;overflow:hidden;box-shadow:0 10px 28px rgba(75,40,109,0.10);margin-top:-58px;position:relative;z-index:2;}
+  .pulse-cell{background:var(--panel);padding:22px 20px;}
+  .pulse-cell .label{font-size:11.5px;color:var(--text-faint);margin-bottom:10px;}
+  .pulse-cell .big{font-family:var(--font-data);font-size:36px;font-weight:600;line-height:1;}
+  .pulse-cell .sub-label{font-size:12px;color:var(--text-dim);margin-top:6px;}
+  .owner-bars{margin-top:14px;display:flex;flex-direction:column;gap:8px;}
+  .owner-bar-row{display:grid;grid-template-columns:100px 1fr 40px;align-items:center;gap:8px;font-size:12px;}
+  .owner-bar-track{height:6px;background:var(--bg-deep);overflow:hidden;border-radius:3px;}
+  .owner-bar-fill{height:100%;background:var(--purple);border-radius:3px;}
+  .owner-bar-row .count{font-family:var(--font-data);color:var(--text-dim);text-align:right;}
+
+  .section-head{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px;}
+  .section-head h2{font-size:19px;margin:0;font-weight:600;color:var(--purple-deep);}
+  .section-head .note{font-size:12.5px;color:var(--text-faint);font-family:var(--font-data);}
+  section{margin-bottom:44px;}
+
+  .stage-chart{display:flex;flex-direction:column;gap:14px;}
+  .stage-row{display:grid;grid-template-columns:140px 1fr 50px;align-items:center;gap:14px;}
+  .stage-row .owner{font-size:13.5px;color:var(--text-dim);}
+  .stage-track{display:flex;height:22px;background:var(--bg-deep);width:100%;overflow:hidden;border-radius:4px;}
+  .stage-seg{height:100%;display:flex;align-items:center;justify-content:center;font-family:var(--font-data);font-size:10.5px;color:#000;font-weight:600;}
+  .stage-row .total{font-family:var(--font-data);text-align:right;color:var(--text-dim);font-size:13px;}
+  .stage-legend{display:flex;gap:18px;margin-top:16px;flex-wrap:wrap;font-size:12px;color:var(--text-dim);}
+  .stage-legend span{display:inline-flex;align-items:center;gap:6px;}
+  .swatch{width:10px;height:10px;display:inline-block;border-radius:2px;}
+
+  .split-row{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:8px;overflow:hidden;}
+  .split-cell{background:var(--panel);padding:20px 22px;}
+  .split-cell h3{margin:0 0 14px 0;font-size:14.5px;font-weight:600;color:var(--text-dim);}
+  .health-row{display:grid;grid-template-columns:90px 1fr 34px;align-items:center;gap:10px;margin-bottom:10px;font-size:13px;}
+  .health-track{height:14px;background:var(--bg-deep);overflow:hidden;border-radius:3px;}
+  .health-fill{height:100%;}
+  .health-row .n{font-family:var(--font-data);text-align:right;color:var(--text-dim);}
+  .cat-row{display:grid;grid-template-columns:90px 1fr 34px;align-items:center;gap:10px;margin-bottom:10px;font-size:13px;}
+  .cat-track{height:14px;background:var(--bg-deep);overflow:hidden;border-radius:3px;}
+  .cat-fill{height:100%;background:var(--purple);}
+
+  .catdef-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:8px;overflow:hidden;margin-bottom:22px;}
+  .catdef-card{background:var(--panel);padding:22px 22px 20px;}
+  .catdef-card .tag{display:inline-block;font-family:var(--font-data);font-size:12px;font-weight:700;color:#fff;background:var(--purple);padding:3px 9px;border-radius:4px;margin-bottom:12px;}
+  .catdef-card .fullname{font-size:13px;font-weight:600;color:var(--purple-deep);margin-bottom:8px;line-height:1.4;}
+  .catdef-card .desc{font-size:12.5px;color:var(--text-dim);line-height:1.55;margin-bottom:14px;}
+  .catdef-card .count{font-family:var(--font-data);font-size:26px;font-weight:600;color:var(--purple);line-height:1;}
+  .catdef-card .count-label{font-size:11px;color:var(--text-faint);margin-top:2px;margin-bottom:12px;}
+  .catdef-card .examples{font-size:11.5px;color:var(--text-faint);border-top:1px dashed var(--line);padding-top:10px;}
+  .catdef-card .examples b{color:var(--text-dim);font-weight:600;}
+  @media (max-width:760px){.catdef-grid{grid-template-columns:1fr;}}
+
+  .flag-log{display:flex;flex-direction:column;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:8px;overflow:hidden;}
+  .flag-entry{background:var(--panel);padding:16px 20px;display:grid;grid-template-columns: 200px 1fr;gap:20px;border-left:4px solid var(--red);}
+  .flag-entry.sev-med{border-left-color:var(--amber);}
+  .flag-entry .fname{font-weight:600;font-size:14.5px;color:var(--purple-deep);}
+  .flag-entry .ftag{display:inline-block;margin-top:6px;font-family:var(--font-data);font-size:11px;color:var(--red); border:1px solid var(--red-dim); background:var(--red-dim); padding:2px 6px;border-radius:3px;}
+  .flag-entry.sev-med .ftag{color:var(--amber);border-color:var(--amber-dim);background:var(--amber-dim);}
+  .flag-entry .fbody .fheadline{font-size:13.5px;color:var(--text);margin-bottom:4px;}
+  .flag-entry .fbody .fdetail{font-size:13px;color:var(--text-dim);}
+
+  .controls{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px;}
+  .controls button{background:var(--panel);border:1px solid var(--line);color:var(--text-dim);font-family:var(--font-data);font-size:12px;padding:7px 13px;cursor:pointer;border-radius:5px;}
+  .controls button.active{background:var(--purple);color:#fff;border-color:var(--purple);}
+  .search-box{background:var(--panel);border:1px solid var(--line);color:var(--text);font-family:var(--font-data);font-size:12.5px;padding:7px 12px;flex:1;min-width:160px;border-radius:5px;}
+  .search-box::placeholder{color:var(--text-faint);}
+
+  .tabs{display:flex;gap:1px;background:var(--line);border:1px solid var(--line);margin-bottom:0;border-radius:8px 8px 0 0;overflow:hidden;}
+  .tabs button{flex:1;background:var(--panel);border:none;color:var(--text-dim);font-family:var(--font-head);font-size:13.5px;font-weight:500;padding:12px 10px;cursor:pointer;}
+  .tabs button.active{background:var(--purple);color:#fff;}
+  .tabs button .n{font-family:var(--font-data);color:var(--text-faint);font-size:11.5px;display:block;margin-top:2px;}
+  .tabs button.active .n{color:#D9C9EA;}
+
+  table{width:100%;border-collapse:collapse;font-size:12.5px;background:var(--panel);}
+  thead th{text-align:left;font-family:var(--font-data);font-size:10.5px;color:var(--text-faint);padding:9px 12px;border-bottom:1px solid var(--line);font-weight:500;}
+  tbody td{padding:10px 12px;border-bottom:1px solid var(--line);color:var(--text);vertical-align:top;}
+  tbody tr:hover{background:var(--panel-raised);}
+  tbody tr:last-child td{border-bottom:none;}
+  .proj-name{font-weight:600;color:var(--purple-deep);}
+  a.proj-link{text-decoration:none;border-bottom:1px dotted var(--text-faint);cursor:pointer;}
+  a.proj-link:hover{color:var(--text);border-bottom-color:var(--text);}
+  a.proj-link::after{content:" ↗";font-size:10px;color:var(--text-faint);}
+  .cat-tag{font-family:var(--font-data);font-size:11px;color:var(--text-dim);}
+  .stage-tag{font-size:11.5px;color:var(--text-dim);}
+  .sow-tag{font-size:11.5px;color:var(--text-dim);font-family:var(--font-data);}
+  .checklist-cell{font-family:var(--font-data);white-space:nowrap;}
+  .mini-track{display:inline-block;width:50px;height:5px;background:var(--bg-deep);margin-right:8px;vertical-align:middle;border-radius:3px;}
+  .mini-fill{height:100%;display:inline-block;vertical-align:top;border-radius:3px;}
+  .notes-cell{color:var(--text-dim);max-width:300px;}
+  .date-cell{font-family:var(--font-data);font-size:11.5px;color:var(--text-dim);white-space:nowrap;}
+  .flag-chip{font-family:var(--font-data);font-size:10.5px;padding:3px 7px;display:inline-block;border:1px solid;border-radius:4px;}
+  .flag-chip.RED{color:var(--red);border-color:var(--red-dim);background:var(--red-dim);}
+  .flag-chip.WATCH{color:var(--amber);border-color:var(--amber-dim);background:var(--amber-dim);}
+  .flag-chip.ONTRACK{color:var(--green);border-color:var(--green-dim);background:var(--green-dim);}
+  .flag-chip.NA{color:var(--text-faint);border-color:var(--line);}
+  .table-wrap{border:1px solid var(--line);overflow-x:auto;border-radius:8px;}
+
+  .hold-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:8px;overflow:hidden;}
+  .hold-card{background:var(--panel);padding:18px 20px;}
+  .hold-card .hname{font-weight:600;font-size:14.5px;margin-bottom:10px;color:var(--purple-deep);}
+  .hold-card .hrow{display:flex;justify-content:space-between;font-size:12.5px;color:var(--text-dim);padding:4px 0;border-bottom:1px dashed var(--line);}
+  .hold-card .hrow:last-of-type{border-bottom:none;}
+  .hold-card .hrow .v{font-family:var(--font-data);color:var(--text);}
+  .hold-card .hnote{margin-top:10px;font-size:12.5px;color:var(--amber);}
+
+  .legacy-card{background:var(--panel);border:1px solid var(--line);padding:22px 26px;display:flex;gap:32px;flex-wrap:wrap;align-items:center;border-radius:8px;}
+  .legacy-stat{text-align:left;}
+  .legacy-stat .n{font-family:var(--font-data);font-size:30px;font-weight:600;color:var(--purple);}
+  .legacy-stat .l{font-size:12px;color:var(--text-faint);margin-top:4px;max-width:200px;}
+  .legacy-note{flex:1;min-width:220px;font-size:12.5px;color:var(--text-dim);}
+
+  .callout{border:1px solid var(--purple);background:var(--panel-raised);padding:16px 20px;font-size:13.5px;color:var(--text);margin-top:18px;border-radius:6px;}
+  .callout strong{color:var(--purple);}
+
+  footer{margin-top:60px;padding-top:20px;border-top:1px solid var(--line);font-family:var(--font-data);font-size:11.5px;color:var(--text-faint);display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;}
+
+  @media (max-width:900px){.pulse-row{grid-template-columns:1fr 1fr;} .split-row{grid-template-columns:1fr;}}
+  @media (max-width:720px){.flag-entry{grid-template-columns:1fr;} .stage-row{grid-template-columns:100px 1fr 40px;}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="masthead">
+    <div>
+      <h1>Transitions</h1>
+      <div class="sub">WFM Center of Excellence — portfolio pulse across Gerson Jiménez, Elle Kumari and Michael Vergara.</div>
+    </div>
+    <div class="meta">
+      v.3.1 · September 2026<br>
+      <span class="pulse">synced from monday.com</span><br>
+      via "Transitions Summary" + "Active Transitions" boards
+    </div>
+  </div>
+
+  <!-- PULSE ROW -->
+  <div class="pulse-row">
+    <div class="pulse-cell">
+      <div class="label">Active projects</div>
+      <div class="big" style="color:var(--blue);">41</div>
+      <div class="owner-bars">
+        <div class="owner-bar-row"><span>Gerson Jiménez</span><div class="owner-bar-track"><div class="owner-bar-fill" style="width:100%"></div></div><span class="count">26</span></div>
+        <div class="owner-bar-row"><span>Elle Kumari</span><div class="owner-bar-track"><div class="owner-bar-fill" style="width:31%"></div></div><span class="count">8</span></div>
+        <div class="owner-bar-row"><span>Michael Vergara</span><div class="owner-bar-track"><div class="owner-bar-fill" style="width:27%"></div></div><span class="count">7</span></div>
+      </div>
+    </div>
+    <div class="pulse-cell">
+      <div class="label">On hold</div>
+      <div class="big" style="color:var(--red);">4</div>
+      <div class="sub-label">0% checklist, all Gerson-owned</div>
+    </div>
+    <div class="pulse-cell">
+      <div class="label">Avg. checklist (active)</div>
+      <div class="big" style="color:var(--amber);">43%</div>
+      <div class="sub-label">across tracked projects</div>
+    </div>
+    <div class="pulse-cell">
+      <div class="label">Red-flag projects</div>
+      <div class="big" style="color:var(--red);">13</div>
+      <div class="sub-label">checklist &lt; 30%</div>
+    </div>
+    <div class="pulse-cell">
+      <div class="label">Closed / legacy</div>
+      <div class="big" style="color:var(--text-dim);">147</div>
+      <div class="sub-label">25 recent + 122 legacy, excluded above</div>
+    </div>
+  </div>
+
+  <!-- STAGE DISTRIBUTION -->
+  <section>
+    <div class="section-head">
+      <h2>Projects by stage</h2>
+      <div class="note">9 pre-launch · 3 training/nesting · 3 launch · 24 BAU post-launch · 2 unassigned</div>
+    </div>
+    <div class="stage-chart" id="stageChart"></div>
+    <div class="stage-legend">
+      <span><span class="swatch" style="background:#E5484D"></span>Pre-Launch</span>
+      <span><span class="swatch" style="background:#F5A623"></span>Training / Nesting</span>
+      <span><span class="swatch" style="background:#8BC34A"></span>Launch</span>
+      <span><span class="swatch" style="background:#3DD16D"></span>BAU Post Launch</span>
+    </div>
+    <div class="callout">
+      <strong>Note —</strong> Michael Vergara's 7 projects (including a brand-new "Equals - Indo" program) are newly assigned Pre-Launch/unscoped programs; Gerson is working these alongside him so Michael can ramp up on the workflow.
+    </div>
+  </section>
+
+  <!-- CATEGORY DEFINITIONS + MIX -->
+  <section>
+    <div class="section-head">
+      <h2>Category mix</h2>
+      <div class="note">active projects · source: monday.com</div>
+    </div>
+
+    <div class="catdef-grid">
+      <div class="catdef-card">
+        <span class="tag" style="background:#E5484D;">NCNB</span>
+        <div class="fullname">New Customer, New Business</div>
+        <div class="desc">A brand-new program for a brand-new client.</div>
+        <div class="count">25</div>
+        <div class="count-label">of 41 active transitions</div>
+        <div class="examples"><b>Examples:</b> Centene - IN, INTUIT - SV, Equals - Indo</div>
+      </div>
+      <div class="catdef-card">
+        <span class="tag" style="background:#F5A623;color:#1A1A1A;">ECNB</span>
+        <div class="fullname">Existing Customer, New Business</div>
+        <div class="desc">An existing program opening a new line of business.</div>
+        <div class="count">12</div>
+        <div class="count-label">of 41 active transitions</div>
+        <div class="examples"><b>Examples:</b> Uber - IN, CIBC - MA, FedEx - SV</div>
+      </div>
+      <div class="catdef-card">
+        <span class="tag" style="background:#3DD16D;color:#1A1A1A;">ECEB</span>
+        <div class="fullname">Existing Customer, Existing Business</div>
+        <div class="desc">An existing program opening a new geography or ramp.</div>
+        <div class="count">4</div>
+        <div class="count-label">of 41 active transitions</div>
+        <div class="examples"><b>Examples:</b> TEMU - PH, Wayfair - IN, Doordash DX &amp; CX - PH</div>
+      </div>
+    </div>
+
+    <div class="split-cell" style="border:1px solid var(--line);border-radius:8px;">
+      <div id="catChart"></div>
+    </div>
+  </section>
+
+  <!-- RED FLAGS -->
+  <section>
+    <div class="section-head">
+      <h2>Red flags &amp; escalations</h2>
+      <div class="note">priority items, current monday.com status</div>
+    </div>
+    <div class="flag-log" id="flagLog"></div>
+  </section>
+
+  <!-- LOWEST CHECKLIST WATCHLIST -->
+  <section>
+    <div class="section-head">
+      <h2>Watchlist — lowest checklist</h2>
+      <div class="note">all at 0%, per the Live Dashboard tab</div>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Project</th><th>WFM PM</th><th>Stage</th><th>Checklist</th><th>Notes</th></tr></thead>
+        <tbody id="watchlistBody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ACTIVE PROJECTS -->
+  <section>
+    <div class="section-head">
+      <h2>Active projects — full list</h2>
+      <div class="note">41 total — filter by owner, search by name</div>
+    </div>
+    <div class="tabs" id="ownerTabs"></div>
+    <div class="controls" style="margin-top:14px;">
+      <input class="search-box" id="searchBox" placeholder="Search project name or notes…">
+      <button data-flagfilter="ALL" class="active">All flags</button>
+      <button data-flagfilter="RED">Red &lt;30%</button>
+      <button data-flagfilter="WATCH">Watch 30–79%</button>
+      <button data-flagfilter="ONTRACK">On track ≥80%</button>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Project</th><th>Category</th><th>Stage</th><th>Kickoff</th><th>Target Go-Live</th><th>SOW</th><th>Checklist</th><th>Notes</th></tr>
+        </thead>
+        <tbody id="projTableBody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ON HOLD -->
+  <section>
+    <div class="section-head">
+      <h2>On hold</h2>
+      <div class="note">not counted in the active total above — all owned by Gerson Jiménez</div>
+    </div>
+    <div class="hold-grid" id="holdGrid"></div>
+    <div class="callout">
+      <strong>Recommended next step —</strong> confirm with account/sales whether each program is still active. Ramble and VinFast have been idle 7–10+ months — recommend a firm restart date, or moving them to Closed so the active pipeline reflects real work in flight.
+    </div>
+  </section>
+
+  <!-- CLOSED / LEGACY -->
+  <section>
+    <div class="section-head">
+      <h2>Closed &amp; legacy scope</h2>
+      <div class="note">excluded from the active portfolio above</div>
+    </div>
+    <div class="legacy-card">
+      <div class="legacy-stat"><div class="n">25</div><div class="l">recently closed / handed over, with PM &amp; category on record</div></div>
+      <div class="legacy-stat"><div class="n">122</div><div class="l">pre-existing legacy accounts — no PM or category recorded on the board</div></div>
+      <div class="legacy-note">These 147 records sit on the same monday.com "Transitions Summary" board but are out of scope for active portfolio tracking — flagged here only so the totals above reconcile against the full board.</div>
+    </div>
+  </section>
+
+  <footer>
+    <span>TELUS Digital — Confidential</span>
+    <span>Source: monday.com "Transitions Summary" + "Active Transitions" boards</span>
+  </footer>
+
+</div>
+
+<script>
+const STAGE_COLORS = { "Pre-Launch": "#E5484D", "Training / Nesting": "#F5A623", "Launch": "#8BC34A", "BAU Post Launch": "#3DD16D" };
+
+const stageData = [
+  {owner:"Gerson Jiménez", stages:{"Pre-Launch":2,"Training / Nesting":1,"Launch":2,"BAU Post Launch":21}, total:26},
+  {owner:"Elle Kumari", stages:{"Pre-Launch":2,"Training / Nesting":2,"Launch":1,"BAU Post Launch":3}, total:8},
+  {owner:"Michael Vergara", stages:{"Pre-Launch":5,"Training / Nesting":0,"Launch":0,"BAU Post Launch":0}, total:7},
+];
+
+const catData = [
+  {label:"NCNB", n:25, color:"#E5484D"},
+  {label:"ECNB", n:12, color:"#F5A623"},
+  {label:"ECEB", n:4, color:"#3DD16D"},
+];
+
+const redFlags = [
+  {sev:"high", name:"Splashdot - US", tag:"BAU Post Launch — go-live date passed", headline:"Blocked on the Five9 POC fix; WFM cannot see TMs.", detail:"Checklist 0%."},
+  {sev:"high", name:"Ticketmaster - ZA / Uber - IN", tag:"Go-live Sep 21", headline:"Both targeted for go-live within days.", detail:"Checklist 9% and 0%; tooling access and hiring (12 RTAs, 1 Sr RTA, 3 Schedulers, 1 Planner, 2 WFM TL) still open on Uber."},
+  {sev:"high", name:"4 programs on hold", tag:"Chase Bank-GT, Ramble-SV, Rockstar Games-IN, VinFast-PH", headline:"0% checklist, no recent updates.", detail:"VinFast and Ramble have been stalled 7–10+ months past target go-live."},
+  {sev:"med", name:"Stryker - ZA, TFG London - ZA, Sparklight/Cable One", tag:"Live with active escalations", headline:"20%, 18% and 17% checklist respectively.", detail:"All three carry open Ops/data-accuracy escalations post-launch."},
+  {sev:"med", name:"Bank of Montreal (BMO) - MA", tag:"Live since April, still 50%", headline:"WFM implementation guide pending 5+ months since go-live.", detail:""},
+  {sev:"med", name:"SNOW / ANF rollout decision", tag:"Systemic blocker across 8 accounts", headline:"Doordash-PH, Wayfair-MA/IN, Doordash DX&CX-PH, TEMU-PH, Western Union-ZA, H&R Block, Robinhood-MA.", detail:"All waiting on the same SNOW implementation and PMA/Amanda rollout decision."},
+  {sev:"med", name:"Centrum - SV", tag:"Checklist 100%, ready to close", headline:"Improved from 82%.", detail:"Note still says WFM implementation guide pending — schedule closure and refresh."},
+];
+
+const projects = {
+  "Gerson Jiménez": [
+    ["CIBC - MA","ECNB","Pre-Launch","2026-05-14","2026-12-21","WIP",36,"Waiting for client to share official schedules","WATCH"],
+    ["Hinge - IN","ECNB","Pre-Launch","2026-08-19","2026-11-11","WIP",0,"Migrating reporting MyTime→GTT + SNOW implementation","RED"],
+    ["Ticketmaster - ZA","NCNB","Launch","2026-06-04","2026-09-21","WIP",9,"Internal alignment w/ Ops+client; tooling access pending","RED"],
+    ["Uber - IN","ECNB","Launch","2026-07-21","2026-09-21","WIP",0,"Hiring 12 RTAs, 1 Sr RTA, 3 Schedulers, 1 Planner, 2 WFM TL","RED"],
+    ["Ping Pong - PH","NCNB","Training / Nesting","2026-08-18","2026-10-26","WIP",0,"Scheduler pending; production date postponed per PMO","RED"],
+    ["Splashdot - US","NCNB","BAU Post Launch","2026-08-17","2026-09-08","WIP",0,"Waiting on Five9 POC fix; WFM can't see TMs — go-live date passed","RED"],
+    ["Bank of Montreal (BMO) - MA","ECNB","BAU Post Launch","2025-09-04","2026-04-13","ESL",50,"WFM implementation guide pending","WATCH"],
+    ["Doordash - PH","ECNB","BAU Post Launch","2025-10-13","2025-12-08","SOW Signed",82,"SNOW pending; ANF/rollout decision with PMA & Amanda","ONTRACK"],
+    ["Riot Games - IN","ECNB","BAU Post Launch","2025-10-16","2025-12-16","WIP",91,"Closure pending, scheduled for next week","ONTRACK"],
+    ["Wayfair - MA","ECNB","BAU Post Launch","2026-01-20","2026-03-30","WIP",82,"SNOW pending; ANF/rollout decision with PMA & Amanda","ONTRACK"],
+    ["Doordash DX & CX - PH","ECEB","BAU Post Launch","2026-01-23","2026-02-23","WIP",82,"SNOW pending; ANF/rollout decision with PMA & Amanda","ONTRACK"],
+    ["CFA Institute - GT","NCNB","BAU Post Launch","2026-03-16","2026-06-22","SOW Signed",36,"Pending deliverables; will follow up and schedule closure","WATCH"],
+    ["Robinhood - MA","NCNB","BAU Post Launch","2026-03-23","2026-06-01","SOW Signed",82,"SNOW implementation pending + ANA bot","ONTRACK"],
+    ["Outreach - PH","NCNB","BAU Post Launch","2026-04-06","2026-08-31","WIP",36,"WFM implementation guide pending + Verint certification","WATCH"],
+    ["Centrum - SV","NCNB","BAU Post Launch","2026-04-21","2026-06-01","SOW Signed",100,"Checklist complete (was 82%) — note still says pending; schedule closure","ONTRACK"],
+    ["WP Engine - SV","ECNB","BAU Post Launch","2026-05-04","2026-06-16","WIP",55,"SNOW + WFM implementation guide pending","WATCH"],
+    ["Nyxoah - SV","NCNB","BAU Post Launch","2026-05-12","2026-07-27","SOW Signed",55,"Pending client credentials + WFM implementation guide","WATCH"],
+    ["Robinhood - US","NCNB","BAU Post Launch","2026-03-02","2026-05-11","SOW Signed",64,"WFM implementation guide pending","WATCH"],
+    ["TEMU - PH","ECEB","BAU Post Launch","2025-10-15","2025-11-24","SOW Signed",91,"SNOW pending; ANF/rollout decision with PMA & Amanda","ONTRACK"],
+    ["Western Union - ZA","ECNB","BAU Post Launch","2025-10-21","2025-12-22","WIP",91,"SNOW pending; ANF/rollout decision with PMA & Amanda","ONTRACK"],
+    ["Stryker - ZA","NCNB","BAU Post Launch","2025-11-05","2026-08-03","SOW Signed",20,"Reporting escalation; SNOW implementation","RED"],
+    ["Wayfair - IN","ECEB","BAU Post Launch","2025-08-06","2025-10-13","WIP",91,"SNOW pending; ANF/rollout decision with PMA & Amanda","ONTRACK"],
+    ["WP Engine - PH","NCNB","BAU Post Launch","2026-01-12","2026-03-09","SOW Signed",55,"SNOW + WFM implementation guide pending","WATCH"],
+    ["TFG London - ZA","NCNB","BAU Post Launch","2026-03-05","2026-07-13","WIP",18,"Data accuracy issues; O/U report pending","RED"],
+    ["H&R Block","NCNB","BAU Post Launch","2025-08-01","2025-11-17","SOW Signed",91,"SNOW pending; ANF/rollout decision with PMA & Amanda","ONTRACK"],
+    ["Sparklight/Cable One - IN/SV","NCNB","BAU Post Launch","2026-05-27","2026-07-13","WIP",17,"Ops escalated WFM reporting issues; action registry created","RED"],
+  ],
+  "Elle Kumari": [
+    ["Tiktok MI Ramp","ECEB","Training / Nesting","—","—","—",null,"—","NA"],
+    ["Kaufland Bosnia & Herzegovina","ECNB","Pre-Launch","—","—","—",null,"—","NA"],
+    ["AVIS Budget Group - BG & PH","NCNB","BAU Post Launch","2026-02-25","2026-05-04","WIP",null,"—","NA"],
+    ["SimpliSafe","NCNB","BAU Post Launch","2026-03-25","2026-05-25","WIP",null,"—","NA"],
+    ["DCS","NCNB","BAU Post Launch","2026-04-20","2026-05-25","SOW Signed",null,"—","NA"],
+    ["Kaufland Romania","ECNB","Training / Nesting","—","—","—",null,"—","NA"],
+    ["Sport Alliance","NCNB","Launch","—","—","—",null,"Launching with no checklist tracked","NA"],
+    ["Cloaked, Inc.","NCNB","Pre-Launch","—","—","—",null,"—","NA"],
+  ],
+  "Michael Vergara": [
+    ["INTUIT - SV","NCNB","Pre-Launch","2026-09-04","2026-11-09","WIP",0,"New program","RED"],
+    ["Spar & Bernstein - SV","NCNB","Pre-Launch","2026-09-11","2026-10-19","WIP",0,"Waiting for kick-off","RED"],
+    ["Park Power - SV","NCNB","Pre-Launch","2026-09-16","—","WIP",0,"Waiting for kick-off","RED"],
+    ["gFiber IT Help Desk – SV","NCNB","Pre-Launch","2026-09-09","2026-11-09","WIP",0,"Internal alignment started","RED"],
+    ["FedEx - SV","ECNB","Pre-Launch","—","2026-11-09","WIP",0,"Waiting for kick-off","RED"],
+    ["Centene - IN","NCNB","Pre-Launch","—","—","—",null,"Just created — no stage or dates set yet","NA"],
+    ["Equals - Indo","NCNB","Pre-Launch","—","—","—",null,"Just created — no stage or dates set yet","NA"],
+  ],
+};
+
+const watchlist = [
+  ["Uber - IN","Gerson Jiménez","Launch","Hiring: 12 RTAs, 1 Sr RTA, 3 Schedulers, 1 Planner, 2 WFM TL."],
+  ["Ping Pong - PH","Gerson Jiménez","Training / Nesting","Scheduler pending; production date postponed upon PMO confirmation."],
+  ["Ticketmaster - ZA","Gerson Jiménez","Launch","Internal alignment with Ops + client; tooling access pending."],
+  ["Hinge - IN","Gerson Jiménez","Pre-Launch","Migrating reporting from MyTime to GTT + SNOW implementation."],
+  ["Splashdot - US","Gerson Jiménez","Launch","Waiting on Five9 POC fix — WFM cannot see TMs. Go-live date passed."],
+  ["INTUIT - SV","Michael Vergara","Pre-Launch","New program."],
+  ["Spar & Bernstein - SV","Michael Vergara","Pre-Launch","Waiting for kick-off."],
+  ["Park Power - SV","Michael Vergara","Pre-Launch","Waiting for kick-off."],
+  ["gFiber IT Help Desk – SV","Michael Vergara","Pre-Launch","Internal alignment started."],
+  ["FedEx - SV","Michael Vergara","Pre-Launch","Waiting for kick-off."],
+];
+
+const onHold = [
+  {name:"Chase Bank - GT", cat:"NCNB", checklist:"0%", kickoff:"—", target:"—", note:"Never kicked off; no updates logged"},
+  {name:"Ramble - SV", cat:"NCNB", checklist:"0%", kickoff:"Nov 3, 2025", target:"—", note:"Stalled 10+ months, no go-live set"},
+  {name:"Rockstar Games - IN", cat:"NCNB", checklist:"0%", kickoff:"May 11, 2026", target:"Jun 29, 2026 (passed)", note:"No updates; target go-live already passed"},
+  {name:"VinFast - PH", cat:"NCNB", checklist:"0%", kickoff:"Dec 17, 2025", target:"Feb 2, 2026 (passed)", note:"On Hold; missed by 7+ months"},
+];
+
+const MONDAY_LINKS = {
+  "CIBC - MA": "https://telusdigital.monday.com/boards/9668126921/pulses/11993203872",
+  "Hinge - IN": "https://telusdigital.monday.com/boards/9668126921/pulses/12822133327",
+  "Ticketmaster - ZA": "https://telusdigital.monday.com/boards/9668126921/pulses/12188658353",
+  "Uber - IN": "https://telusdigital.monday.com/boards/9668126921/pulses/12685554844",
+  "Ping Pong - PH": "https://telusdigital.monday.com/boards/9668126921/pulses/12805341292",
+  "Splashdot - US": "https://telusdigital.monday.com/boards/9668126921/pulses/12822133767",
+  "Bank of Montreal (BMO) - MA": "https://telusdigital.monday.com/boards/9668126921/pulses/9891107059",
+  "Doordash - PH": "https://telusdigital.monday.com/boards/9668126921/pulses/18175028308",
+  "Riot Games - IN": "https://telusdigital.monday.com/boards/9668126921/pulses/18196692204",
+  "Wayfair - MA": "https://telusdigital.monday.com/boards/9668126921/pulses/11015626426",
+  "Doordash DX & CX - PH": "https://telusdigital.monday.com/boards/9668126921/pulses/11086458154",
+  "CFA Institute - GT": "https://telusdigital.monday.com/boards/9668126921/pulses/11504069485",
+  "Robinhood - MA": "https://telusdigital.monday.com/boards/9668126921/pulses/11592728152",
+  "Outreach - PH": "https://telusdigital.monday.com/boards/9668126921/pulses/11703030132",
+  "Centrum - SV": "https://telusdigital.monday.com/boards/9668126921/pulses/11724273749",
+  "WP Engine - SV": "https://telusdigital.monday.com/boards/9668126921/pulses/11724461999",
+  "Nyxoah - SV": "https://telusdigital.monday.com/boards/9668126921/pulses/11993165014",
+  "Robinhood - US": "https://telusdigital.monday.com/boards/9668126921/pulses/11464750977",
+  "TEMU - PH": "https://telusdigital.monday.com/boards/9668126921/pulses/18196692827",
+  "Western Union - ZA": "https://telusdigital.monday.com/boards/9668126921/pulses/18196693390",
+  "Stryker - ZA": "https://telusdigital.monday.com/boards/9668126921/pulses/9920396299",
+  "Wayfair - IN": "https://telusdigital.monday.com/boards/9668126921/pulses/9957909879",
+  "WP Engine - PH": "https://telusdigital.monday.com/boards/9668126921/pulses/10981756564",
+  "TFG London - ZA": "https://telusdigital.monday.com/boards/9668126921/pulses/11464356907",
+  "H&R Block": "https://telusdigital.monday.com/boards/9668126921/pulses/9730299747",
+  "Sparklight/Cable One - IN/SV": "https://telusdigital.monday.com/boards/9668126921/pulses/12188593148",
+  "Tiktok MI Ramp": "https://telusdigital.monday.com/boards/9668126921/pulses/12782068806",
+  "Kaufland Bosnia & Herzegovina": "https://telusdigital.monday.com/boards/9668126921/pulses/12782075166",
+  "AVIS Budget Group - BG & PH": "https://telusdigital.monday.com/boards/9668126921/pulses/11419493587",
+  "SimpliSafe": "https://telusdigital.monday.com/boards/9668126921/pulses/12010709332",
+  "DCS": "https://telusdigital.monday.com/boards/9668126921/pulses/12010709150",
+  "Kaufland Romania": "https://telusdigital.monday.com/boards/9668126921/pulses/12782083228",
+  "Sport Alliance": "https://telusdigital.monday.com/boards/9668126921/pulses/12782084271",
+  "Cloaked, Inc.": "https://telusdigital.monday.com/boards/9668126921/pulses/12941041349",
+  "INTUIT - SV": "https://telusdigital.monday.com/boards/9668126921/pulses/12951887486",
+  "Spar & Bernstein - SV": "https://telusdigital.monday.com/boards/9668126921/pulses/13018211115",
+  "Park Power - SV": "https://telusdigital.monday.com/boards/9668126921/pulses/13019838466",
+  "gFiber IT Help Desk – SV": "https://telusdigital.monday.com/boards/9668126921/pulses/13019897163",
+  "FedEx - SV": "https://telusdigital.monday.com/boards/9668126921/pulses/13020179740",
+  "Centene - IN": "https://telusdigital.monday.com/boards/9668126921/pulses/13095713587",
+  "Equals - Indo": "https://telusdigital.monday.com/boards/9668126921/pulses/13113334326",
+};
+function mondayLink(name){ return MONDAY_LINKS[name] || null; }
+
+function checklistColor(pct){
+  if(pct===null) return "var(--text-faint)";
+  if(pct<30) return "var(--red)";
+  if(pct<80) return "var(--amber)";
+  return "var(--green)";
+}
+function fmtDate(d){ return d === "—" || !d ? "—" : d; }
+
+// Stage chart
+const stageChart = document.getElementById('stageChart');
+stageData.forEach(row=>{
+  const rowEl = document.createElement('div');
+  rowEl.className = 'stage-row';
+  const segs = Object.entries(row.stages).filter(([,v])=>v>0).map(([k,v])=>{
+    const pct = (v/row.total*100).toFixed(1);
+    return `<div class="stage-seg" style="width:${pct}%;background:${STAGE_COLORS[k]}" title="${k}: ${v}">${v}</div>`;
+  }).join('');
+  rowEl.innerHTML = `<div class="owner">${row.owner}</div><div class="stage-track">${segs}</div><div class="total">${row.total}</div>`;
+  stageChart.appendChild(rowEl);
+});
+
+// Category chart
+const catChart = document.getElementById('catChart');
+const catTotal = catData.reduce((a,b)=>a+b.n,0);
+catData.forEach(c=>{
+  const row = document.createElement('div');
+  row.className = 'cat-row';
+  const pct = (c.n/catTotal*100).toFixed(0);
+  row.innerHTML = `<span>${c.label}</span><div class="cat-track"><div class="cat-fill" style="width:${pct}%;background:${c.color}"></div></div><span class="n">${c.n}</span>`;
+  catChart.appendChild(row);
+});
+
+// Flags
+const flagLog = document.getElementById('flagLog');
+redFlags.forEach(f=>{
+  const el = document.createElement('div');
+  el.className = 'flag-entry' + (f.sev==='med' ? ' sev-med' : '');
+  el.innerHTML = `<div><div class="fname">${f.name}</div><div class="ftag">${f.tag}</div></div>
+    <div class="fbody"><div class="fheadline">${f.headline}</div>${f.detail ? `<div class="fdetail">${f.detail}</div>` : ''}</div>`;
+  flagLog.appendChild(el);
+});
+
+// Watchlist
+const watchlistBody = document.getElementById('watchlistBody');
+watchlist.forEach(([name,owner,stage,notes])=>{
+  const tr = document.createElement('tr');
+  tr.innerHTML = `<td><div class="proj-name">${name}</div></td><td class="stage-tag">${owner}</td><td class="stage-tag">${stage}</td>
+    <td class="checklist-cell" style="color:var(--red)">0%</td><td class="notes-cell">${notes}</td>`;
+  watchlistBody.appendChild(tr);
+});
+
+// Owner tabs + project table
+const ownerNames = Object.keys(projects);
+const tabsEl = document.getElementById('ownerTabs');
+let currentOwner = "ALL", currentFlag = "ALL", currentSearch = "";
+
+function renderTabs(){
+  tabsEl.innerHTML = '';
+  const allBtn = document.createElement('button');
+  allBtn.innerHTML = 'All owners<span class="n">41</span>';
+  if(currentOwner==="ALL") allBtn.classList.add('active');
+  allBtn.onclick = ()=>{currentOwner="ALL"; renderTabs(); renderTable();};
+  tabsEl.appendChild(allBtn);
+  ownerNames.forEach(name=>{
+    const btn = document.createElement('button');
+    btn.innerHTML = `${name}<span class="n">${projects[name].length}</span>`;
+    if(currentOwner===name) btn.classList.add('active');
+    btn.onclick = ()=>{currentOwner=name; renderTabs(); renderTable();};
+    tabsEl.appendChild(btn);
+  });
+}
+document.querySelectorAll('[data-flagfilter]').forEach(btn=>{
+  btn.onclick = ()=>{
+    document.querySelectorAll('[data-flagfilter]').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    currentFlag = btn.dataset.flagfilter;
+    renderTable();
+  };
+});
+document.getElementById('searchBox').addEventListener('input', (e)=>{ currentSearch = e.target.value.toLowerCase(); renderTable(); });
+
+function renderTable(){
+  const tbody = document.getElementById('projTableBody');
+  tbody.innerHTML = '';
+  const ownersToShow = currentOwner === "ALL" ? ownerNames : [currentOwner];
+  ownersToShow.forEach(owner=>{
+    projects[owner].forEach(([name, cat, stage, kickoff, target, sow, pct, notes, flag])=>{
+      if(currentFlag !== "ALL" && flag !== currentFlag) return;
+      const haystack = (name + ' ' + notes).toLowerCase();
+      if(currentSearch && !haystack.includes(currentSearch)) return;
+      const tr = document.createElement('tr');
+      const pctLabel = pct===null ? "—" : pct + "%";
+      const fillWidth = pct===null ? 0 : pct;
+      const link = mondayLink(name);
+      const nameHtml = link
+        ? `<a href="${link}" target="_blank" rel="noopener" class="proj-name proj-link">${name}</a>`
+        : `<div class="proj-name">${name}</div>`;
+      tr.innerHTML = `
+        <td>${nameHtml}<div style="font-size:11px;color:var(--text-faint);margin-top:2px;">${owner}</div></td>
+        <td class="cat-tag">${cat}</td>
+        <td class="stage-tag">${stage}</td>
+        <td class="date-cell">${fmtDate(kickoff)}</td>
+        <td class="date-cell">${fmtDate(target)}</td>
+        <td class="sow-tag">${sow}</td>
+        <td class="checklist-cell">
+          <span class="mini-track"><span class="mini-fill" style="width:${fillWidth}%;background:${checklistColor(pct)}"></span></span>
+          <span style="color:${checklistColor(pct)}">${pctLabel}</span>
+        </td>
+        <td class="notes-cell">${notes}</td>
+      `;
+      tbody.appendChild(tr);
+    });
+  });
+  if(tbody.innerHTML === ''){
+    tbody.innerHTML = `<tr><td colspan="8" style="color:var(--text-faint);text-align:center;padding:24px;">No projects match this filter.</td></tr>`;
+  }
+}
+renderTabs();
+renderTable();
+
+// On hold grid
+const holdGrid = document.getElementById('holdGrid');
+onHold.forEach(h=>{
+  const card = document.createElement('div');
+  card.className = 'hold-card';
+  card.innerHTML = `<div class="hname">${h.name}</div>
+    <div class="hrow"><span>Category</span><span class="v">${h.cat}</span></div>
+    <div class="hrow"><span>Checklist</span><span class="v">${h.checklist}</span></div>
+    <div class="hrow"><span>Kickoff</span><span class="v">${h.kickoff}</span></div>
+    <div class="hrow"><span>Target go-live</span><span class="v">${h.target}</span></div>
+    <div class="hnote">${h.note}</div>`;
+  holdGrid.appendChild(card);
+});
+</script>
+</body>
+</html>
